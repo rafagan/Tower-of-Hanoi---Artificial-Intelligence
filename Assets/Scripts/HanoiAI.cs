@@ -3,8 +3,8 @@ using System.Collections;
 
 public class HanoiAI : MonoBehaviour {
 	public GameObject bigRing, mediumRing, smallRing;
-	public Transform tower1, tower2, tower3;
 
+	private float tower1X, tower2X, tower3X;
 	private float bottomRingY, middleRingY, topRingY;
 
 	void Awake() {
@@ -12,9 +12,9 @@ public class HanoiAI : MonoBehaviour {
 		mediumRing = GameObject.Find ("MediumRing");
 		smallRing = GameObject.Find ("SmallRing");
 
-		tower1 = GameObject.Find ("Tower1").transform;
-		tower2 = GameObject.Find ("Tower2").transform;
-		tower3 = GameObject.Find ("Tower3").transform;
+		tower1X = GameObject.Find ("Tower1").transform.position.x;
+		tower2X = GameObject.Find ("Tower2").transform.position.x;
+		tower3X = GameObject.Find ("Tower3").transform.position.x;
 
 		bottomRingY = bigRing.transform.position.y;
 		middleRingY = mediumRing.transform.position.y;
@@ -23,7 +23,6 @@ public class HanoiAI : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		bigRing.transform.position = tower3.position;
 	}
 	
 	// Update is called once per frame
