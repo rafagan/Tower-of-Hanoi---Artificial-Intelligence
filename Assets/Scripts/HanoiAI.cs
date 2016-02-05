@@ -43,41 +43,41 @@ public class HanoiAI : MonoBehaviour {
 	}
 
 	void Start () {
-		Hanoi (_gm.TotalRings);
+		HanoiLoopless (_gm.TotalRings);
 		StartCoroutine (ShowResults());
 	}
 
-	//Observações: A AI da torre de Hanói baseia-se no percorrimento de uma árvore binária in-order (LPR - Left-Parent-Right).
-	//O número de discos determinam qual será o nível da árvore, sendo cada nível preenchido completamente
-	//Um nível par da árvore possui o padrão de comportamento: 1-2, 2-3, 3-1; ou xyz'
-	//Um nível ímpar da árvore possui o padrão de comportamento: 1-3, 3-2, 2-1; ou zy'x'
+	//Notes: The Hanoi Tower AI is based on the traversal of a binary tree in-order (LPR - Left-Parent-Right).
+	//The number of disks determines what will be the level of the tree, being each level filled completely
+	//An even tree level has the default behavior: 1-2, 2-3, 3-1; or xyz'
+	//An odd tree level has the default behavior: 1-3, 3-2, 2-1; or zy'x'
 	void Hanoi(int n) {
-		//Os três primeiros digitos são sequências de passos para casos onde (n - i, ou n - ringToMove) é par. Os três últimos para caso ímpar.
+		//The first three digits are sequences of steps to cases where (n - i, or n - ringToMove) is even. The last three to odd case.
 		int[] pegs = new int[]{1, 2, 3, 1, 3, 2};
 
-		//Calcula quantos movimentos serão necessários (2^n - 1)
+		//Calculates how many moves are needed (2^n - 1)
 		int move = (1 << n) - 1;
 
-		//Para cada movimento
+		//For each movement
 		for (int currentMoveCount = 1; currentMoveCount <= move; currentMoveCount++) {
-			//Calcula qual será o disco a ser movimentado.
-			//O disco a ser movimentado é definido pelo número de zeros à direita que o contador de ação atual possui
-			//Ou seja, quantas vezes podemos dividir este número por 2
-			//Sendo assim ringToMove é um expoente, cuja base é 2
-			//Mais tarde, será somado +1 a esse expoente, sendo este o valor final do disco a ser movido
+			//Calculates which disk will be moved.
+			//The disk to be moved is defined by the number of zeros on the right that the current action has counted
+			//In other words, how many times we divide that number by 2
+			//So ringToMove is an exponent, whose base is 2
+			//Later, +1 will be added to this exponent, which is the final value of the disk id to be moved
 			int ringToMove = 0;
 			while ((currentMoveCount >> ringToMove & 1) == 0)
 				ringToMove++;
 
-			//Verifica se o número resultante da subtração do total de discos pelo disco atual é par ou impar
+			//Checks if the resulting number by subtracting the total of discs by the current disc is even or odd
 			int evenOrOdd = (n - ringToMove) & 1;
 
-			//A torre que removeremos o disco atual será {1, 2, 3}, se par, ou {1, 3, 2}, se impar
-			//O shift remove todos os zeros
+			//The tower we'll remove the current disk is {1, 2, 3}, if pair, or {1, 3, 2}, if odd
+			//The shift operator removes all zeros
 			int helper = (currentMoveCount >> ++ringToMove) % 3;
 			int fromTower = pegs[helper + (evenOrOdd * 3)];
 
-			//A torre que levaremos o discuto atual é a torre da partida +1 (em even), ou +2 (em odd)
+			//The tower that we will take the current disc is the fromTower +1 (in even) or +2 (in odd)
 			int toTower = (fromTower + evenOrOdd) % 3 + 1;
 			_commands.Enqueue (new MoveCommand(ringToMove, fromTower, toTower));
 		}
@@ -89,8 +89,8 @@ public class HanoiAI : MonoBehaviour {
 		int[] pegs = new int[]{1, 2, 3, 1, 3, 2};
 
 		for (j = 1; j <= move; j++) {
-			//O objetivo do logaritmo é descobrir i, tal que 2^i = (j & ~(j - 1)). 
-			//Com esse simples cálculo, contamos quantos zeros existem após o 1
+			//The purpose of the log is to find i such that 2 ^ i = (j & ~ (j - 1)).
+			//With this simple calculation, we count how many zeros there are after 1, the reason which we used the loop before
 			i = (int)(Mathf.Log(j & ~(j - 1), 2));
 
 			l = (n - i) & 1;
